@@ -85,4 +85,12 @@ and i.tipoinfraccion = 4*/
 
 
 --punto7
-select infraccion.patente, infraccion.dni, sum
+select i.patente, veh.dni, sum(t.importe)
+from infraccion i, vehiculo veh, tipoinfraccion t, valuacion val
+where i.patente = veh.patente
+and i.pagada = 'FALSE'
+and i.tipoinfraccion = t.tipoinfraccion
+and veh.idmodelo = val.idmodelo
+and veh.anio = val.anio
+group by i.patente, veh.dni, val.valor
+having sum(t.importe) < val.valor
